@@ -104,16 +104,18 @@ def compo_apply(file_src, file_dst, is_refresh=False):
 
 
 def create_argparse():
+    import os
     import argparse
 
     if is_blender:
         usage_text = (
             "Run blender in background mode with this script:"
-            "  blender --background --python " + __file__ + " -- [options]")
+            "  blender --background "
+            "--python " + os.path.basename(__file__) + " -- [options]")
     else:
         usage_text = (
-            "Run this script to convert image(s)"
-            "  " + __file__ + " --blend=FILE "
+            "Run this script to convert image(s):" +
+            os.path.basename(__file__) + " --blend=FILE "
             "--input=FILE --output=FILE [options]")
 
     parser = argparse.ArgumentParser(description=usage_text)
