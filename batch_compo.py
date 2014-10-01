@@ -35,7 +35,7 @@ Example use:
 """
 
 
-def compo_apply(file_src, file_dst):
+def compo_apply(file_src, file_dst, is_refresh=False):
     """
     Given an input & output, load the file and
     render the output at the same resolution.
@@ -51,6 +51,28 @@ def compo_apply(file_src, file_dst):
                 if (is_select is False) or node.select:
                     if node.type == 'IMAGE':
                         return node
+
+    def is_path_newer(f_src, f_dst, default=False):
+        """
+        Is f_src newer than f_dst.
+        """
+        import os
+        try:
+            t_src = os.path.getmtime(f_src)
+        except:
+            return default
+        try:
+            t_dst = os.path.getmtime(f_dst)
+        except:
+            return default
+        return (t_src > t_dst)
+
+    if is_refresh:
+        if not is_path_newer(file_src, file_dst):
+            print(" Refresh: skipping up to date: %r" % file_dst)
+            return
+
+    print(" Converting %r --> %r" % (file_src, file_dst))
 
     import bpy
     scene = bpy.context.scene
@@ -96,17 +118,20 @@ def create_argparse():
 
     parser = argparse.ArgumentParser(description=usage_text)
 
-    # for main_render() only
+    # for main_render() only, but validate args.
     parser.add_argument(
-            "-i", "--input", dest="path_src", metavar='FILE',
+            "-i", "--input", dest="path_src", metavar='FILE', required=True,
             help="Input path(s) or a wildcard to glob many files")
     parser.add_argument(
-            "-o", "--output", dest="path_dst", metavar='FILE',
+            "-o", "--output", dest="path_dst", metavar='FILE', required=True,
             help="Output file or a directory when multiple inputs are passed")
+    parser.add_argument(
+            "-r", "--refresh", dest="is_refresh", default=False, action="store_true",
+            help="Refresh, only overwrite output if input is newer.")
 
     # for main_launch() only
     parser.add_argument(
-            "-b", "--blend", dest="blend_file", metavar='FILE',
+            "-b", "--blend", dest="blend_file", metavar='FILE', required=True,
             help="Blend file to load as a compositor template")
     parser.add_argument(
             "-e", "--bin", dest="blend_bin", metavar='FILE',
@@ -146,8 +171,7 @@ def main_render():
         if os.path.isdir(file_dst):
             file_dst = os.path.join(file_dst, os.path.basename(file_src))
 
-        print(" Converting %r --> %r" % (file_src, file_dst))
-        compo_apply(file_src, file_dst)
+        compo_apply(file_src, file_dst, is_refresh=args.is_refresh)
     else:
         # Multiple source files (glob)
         import glob
@@ -171,8 +195,7 @@ def main_render():
 
             fn_dst = os.path.join(file_dst, os.path.basename(fn_src))
 
-            print(" Converting %r --> %r" % (fn_src, fn_dst))
-            compo_apply(fn_src, fn_dst)
+            compo_apply(fn_src, fn_dst, is_refresh=args.is_refresh)
 
     print("batch job finished, exiting")
 

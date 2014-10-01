@@ -30,17 +30,17 @@ Workflow
 Command Line Args
 -----------------
 
-``--blend``
+``-b / --blend``
    The ``.blend`` file to use as a template for the batch conversion.
 
    *Takes a single blend file.*
 
-``--bin`` (optional)
+``-e / --bin`` (optional)
    The Blender executable (use if ``blender`` isn't in the system ``PATH``)
 
    *Takes a single executable file.*
 
-``--input``
+``-i / --input``
    This takes an input file, which can be any format Blender supports.
    Matching multiple files is also supported, ``images/*.png`` for example.
 
@@ -51,8 +51,7 @@ Command Line Args
       When there are multiple input files,
       the output must be set to a directory.
 
-``--output``
-   *This takes an output path, directories will be re*
+``-o / --output``
 
    .. note::
 
@@ -61,14 +60,18 @@ Command Line Args
 
    *Takes a single file or directory.*
 
+``-r / --refresh`` (optional)
+   When passed, skip converting images when the output files are newer than the input.
+
+   *Takes no arguments*
+
+
 TODO
 ----
 
 This script is intentionally kept small/simple,
 nevertheless there are some possible additions/improvements.
 
-**multi-processing**
-   Run multiple conversions at once.
 **match file-format**
    Use the same output format as used by the input format.
 **scale-images**
