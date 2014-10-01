@@ -27,6 +27,22 @@ Workflow
    that gets assigned the input images.
 
 
+Example Usage
+-------------
+
+Converting a single file:
+
+.. code-block:: sh
+
+   batch_compo.py --blend=compo.blend --input="image_src.png" --output="image_dst.png"
+
+Converting a directory full of ``PNG`` images:
+
+.. code-block:: sh
+
+   batch_compo.py --blend=compo.blend --input="./images_src/*.png" --output="./images_dst"
+
+
 Command Line Args
 -----------------
 
