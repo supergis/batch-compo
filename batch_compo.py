@@ -31,7 +31,7 @@ matching the render resolution to the input.
 
 Example use:
 
-   batch_compo.py --blend=compo.blend --input="/images_src/*.png" --output="/images_dst"
+   batch_compo.py --blend=compo.blend --input="./images_src/*.png" --output="./images_dst"
 """
 
 
